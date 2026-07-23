@@ -24,18 +24,47 @@ public class ReservasController : ControllerBase
         try
         {
             var reserva = await _mediator.Send(new CriarReservaCommand(dados), cancellationToken);
-            return CreatedAtAction(nameof(Criar), new { codigo = reserva.CodigoReserva }, reserva);
+            return CreatedAtAction(nameof(ObterPorCodigo), new { codigo = reserva.CodigoReserva }, reserva);
         }
         catch (ArgumentException ex)
         {
-            // Lançada pelo construtor de Passageiro/Reserva quando algum dado é inválido
-            // (ex: CPF inválido, e-mail inválido, número de assento <= 0)
             return BadRequest(new { mensagem = ex.Message });
         }
         catch (InvalidOperationException ex)
         {
-            // Lançada pelo Handler quando uma regra de negócio é violada
-            // (ex: assento ocupado, viagem já realizada, viagem não encontrada)
+            return BadRequest(new { mensagem = ex.Message });
+        }
+    }
+
+    // GET /reservas/{codigo}
+    [HttpGet("{codigo}")]
+    public async Task<ActionResult<ReservaDetalhesDto>> ObterPorCodigo(
+        string codigo,
+        CancellationToken cancellationToken)
+    {
+        var reserva = await _mediator.Send(new ObterReservaPorCodigoQuery(codigo), cancellationToken);
+
+        if (reserva is null)
+            return NotFound(new { mensagem = "Reserva não encontrada." });
+
+        return Ok(reserva);
+    }
+
+    // DELETE /reservas/{codigo}
+    [HttpDelete("{codigo}")]
+    public async Task<IActionResult> Cancelar(string codigo, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _mediator.Send(new CancelarReservaCommand(codigo), cancellationToken);
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { mensagem = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
             return BadRequest(new { mensagem = ex.Message });
         }
     }
