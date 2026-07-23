@@ -18,7 +18,10 @@ public class Reserva
     public string CodigoReserva { get; private set; }
     public DateTime CriadaEm { get; private set; }
 
-    private Reserva() { }
+    private Reserva()
+    {
+        CodigoReserva = null!;
+    }
 
     public Reserva(Guid viagemId, Guid passageiroId, int numeroAssento, string codigoReserva)
     {

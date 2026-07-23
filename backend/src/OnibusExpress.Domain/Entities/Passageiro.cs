@@ -8,7 +8,12 @@ public class Passageiro
     public string Email { get; private set; }
     public DateTime DataNascimento { get; private set; }
 
-    private Passageiro() { }
+    private Passageiro()
+    {
+        Nome = null!;
+        Cpf = null!;
+        Email = null!;
+    }
 
     public Passageiro(string nome, string cpf, string email, DateTime dataNascimento)
     {
