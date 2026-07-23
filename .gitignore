@@ -22,3 +22,6 @@ frontend/.vite/
 ## SO ##
 .DS_Store
 Thumbs.db
+
+## Scripts temporários de teste local ##
+backend/**/seed.sql
