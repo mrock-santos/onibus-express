@@ -9,7 +9,11 @@ public class Rota
 
     // Construtor privado sem parâmetros — exigência do Entity Framework Core
     // para conseguir "materializar" (reconstruir) o objeto vindo do banco.
-    private Rota() { }
+    private Rota()
+    {
+        Origem = null!;
+        Destino = null!;
+    }
 
     public Rota(string origem, string destino, TimeSpan duracaoEstimada)
     {
