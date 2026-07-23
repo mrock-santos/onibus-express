@@ -27,4 +27,16 @@ public class ViagensController : ControllerBase
         var viagens = await _mediator.Send(query, cancellationToken);
         return Ok(viagens);
     }
+
+     // GET /viagens/{id}
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<ViagemDetalhesDto>> ObterPorId(Guid id, CancellationToken cancellationToken)
+    {
+        var viagem = await _mediator.Send(new ObterViagemPorIdQuery(id), cancellationToken);
+
+        if (viagem is null)
+            return NotFound(new { mensagem = "Viagem não encontrada." });
+
+        return Ok(viagem);
+    }
 }
